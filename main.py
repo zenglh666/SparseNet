@@ -44,11 +44,11 @@ tf.app.flags.DEFINE_string('restore_check_point_file', '',
 
 tf.app.flags.DEFINE_string('log_file', timestr+'.log',
                            '''the directory of file saved''')
-tf.app.flags.DEFINE_float('reduce_ratio',0.1,
+tf.app.flags.DEFINE_float('reduce_ratio',0.0,
                           '''the ratio of pruning reduce parameter''')
-tf.app.flags.DEFINE_float('sparse_ratio',0.1,
+tf.app.flags.DEFINE_float('sparse_ratio',0.0,
                           '''the ratio of pruning sparse parameter''')
-tf.app.flags.DEFINE_float('project_ratio',0.1,
+tf.app.flags.DEFINE_float('project_ratio',0.0,
                           '''the ratio of pruning project parameter''')
 
 
