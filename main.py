@@ -1,6 +1,7 @@
 import os
 import math
 import logging
+import datetime
 import tensorflow as tf
 from vgg_sparse import VGGBaseTrain
 from vgg_sparse import VGGSparseTrain
