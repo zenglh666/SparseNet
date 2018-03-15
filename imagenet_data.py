@@ -25,7 +25,7 @@ import tensorflow as tf
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('imagenet_train_data_dir', 'E:/data2/imagenet_train_tfrecord',
                            """Path to the imagenet data directory.""")
-tf.app.flags.DEFINE_string('imagenet_test_data_dir', 'E:/data2/imagenet_valid_tfrecord',
+tf.app.flags.DEFINE_string('imagenet_valid_data_dir', 'E:/data2/imagenet_valid_tfrecord',
                            """Path to the imagenet data directory.""")
 
 
@@ -66,7 +66,7 @@ class ImagenetData():
     if self.subset=='train':
       tf_record_pattern = os.path.join(FLAGS.imagenet_train_data_dir, '%s-*' % self.subset)
     elif self.subset=='validation':
-      tf_record_pattern = os.path.join(FLAGS.imagenet_test_data_dir, '%s-*' % self.subset)
+      tf_record_pattern = os.path.join(FLAGS.imagenet_valid_data_dir, '%s-*' % self.subset)
     data_files = tf.gfile.Glob(tf_record_pattern)
     if not data_files:
       print('No files found for dataset %s/%s' % (self.name, self.subset))
