@@ -5,13 +5,17 @@ from variable_list import VariableList
 from layers import Layers
 from pruner import PCAL2Pruner
 
+FLAGS = tf.app.flags.FLAGS
+tf.app.flags.DEFINE_float('regularizer_factor',0.0005,
+                          '''the ratio of pruning project parameter''')
+
 class Model():
   def __init__(self, variable_list, fully_index, sparse_index, sparse_num, input_shape):
 
     self._variable_list = copy.deepcopy(variable_list)
     self.layers = Layers(
       weight_init=tf.contrib.layers.xavier_initializer(),
-      regularizer=tf.contrib.layers.l2_regularizer(0.0005),
+      regularizer=tf.contrib.layers.l2_regularizer(FLAGS.regularizer_factor),
       bias_init=tf.constant_initializer(0.0))
     self.fully_index = fully_index
     self.sparse_index = sparse_index
