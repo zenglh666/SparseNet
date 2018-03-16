@@ -148,7 +148,7 @@ def train(model):
     for grad, var in grads:
       tf.add_to_collection('grads', grad)
 
-    loss = tf.reduce_sum(tf.get_collection('losses'), name='loss')
+    loss = tf.reduce_mean(tf.get_collection('losses'), name='loss')
 
     ema = tf.train.ExponentialMovingAverage(
         0.997, global_step, name='average')
