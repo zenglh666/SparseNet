@@ -44,7 +44,7 @@ import tensorflow as tf
 import numpy as np
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_integer('num_preprocess_threads', 64,
+tf.app.flags.DEFINE_integer('num_preprocess_threads', 16,
                             """Number of preprocessing threads per tower. """
                             """Please make this a multiple of 4.""")
 tf.app.flags.DEFINE_integer('num_readers', 8,
