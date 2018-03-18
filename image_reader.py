@@ -119,12 +119,12 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
     min_queue_examples = examples_per_shard
     if train:
       examples_queue = tf.RandomShuffleQueue(
-          capacity=min_queue_examples + 16 * batch_size,
+          capacity=min_queue_examples + 8 * batch_size,
           min_after_dequeue=min_queue_examples,
           dtypes=[tf.string])
     else:
       examples_queue = tf.FIFOQueue(
-          capacity=examples_per_shard + 16 * batch_size,
+          capacity=examples_per_shard + 8 * batch_size,
           dtypes=[tf.string])
 
     # Create multiple readers to populate the queue of examples.
