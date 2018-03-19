@@ -235,9 +235,9 @@ def train_decompose(save_dir):
         variable_list.write(save_npy_file)
         logger.info("Model saved in file: %s.npy" % save_npy_file)
 
-      if epoch == 1:
+      if epoch == 0:
         variable_list = model.pruning_reduce(FLAGS.reduce_ratio)
-      elif epoch == 2:
+      elif epoch == 1:
         variable_list = model.pruning_sparse(FLAGS.sparse_ratio)
       else:
         variable_list = model.get_variable_list()
