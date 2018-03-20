@@ -18,7 +18,8 @@ class PCAL2Pruner(object):
           pca = PCA(n_components = kernel_count)
           pca.fit(param_reshape)
           keep = (pca.explained_variance_ratio_ /
-              np.max(pca.explained_variance_ratio_))
+              np.average(pca.explained_variance_ratio_))
+
           pruning_count = np.sum(keep < ratio)
 
           if pruning_count < kernel_count:

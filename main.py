@@ -222,6 +222,7 @@ def train_decompose(save_dir):
       threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
       variable_list = model.get_variable_list()
+      logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
       print_hyper_param(variable_list)
       training(sess, global_step, train_op, loss, eval1_op, eval5_op,
                checkpoint_file, saver, merged, train_writer)
@@ -292,6 +293,7 @@ def finetune_decompose(save_dir):
         model.restore_parameters(sess)
 
         variable_list = model.get_variable_list()
+        logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
         print_hyper_param(variable_list)
         training(sess, global_step, train_op, loss, eval1_op, eval5_op,
                  checkpoint_file, saver, merged, train_writer)
