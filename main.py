@@ -264,12 +264,14 @@ def finetune_decompose(save_dir):
       model = VGGSparseFinetune(variable_list)
 
     if epoch == 0:
+      logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
+      print_hyper_param(variable_list)
       variable_list = model.pruning_project(FLAGS.project_ratio)
     else:
       train_op, loss, global_step = train(model)
       eval1_op, eval5_op = eval(model)
       saver = tf.train.Saver(model.get_sparse_variable_chain(), max_to_keep=5)
-      checkpoint_file = os.path.join(save_dir,'cifar_finetune_%d.ckpt' % epoch)
+      checkpoint_file = os.path.join(save_dir,'finetune_%d.ckpt' % epoch)
 
       if FLAGS.use_summary:
         summary(loss, global_step)
@@ -302,7 +304,7 @@ def finetune_decompose(save_dir):
         if FLAGS.store_middle_ckpt_npy:
           save_path = saver.save(sess, checkpoint_file)
 
-          save_npy_file = os.path.join(save_dir,'cifar_finetune')
+          save_npy_file = os.path.join(save_dir,'finetune')
           variable_list.write(save_npy_file)
           logger.info("Model saved in file: %s" % save_path)
 
@@ -312,7 +314,7 @@ def finetune_decompose(save_dir):
         
     logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
 
-  save_npy_file = os.path.join(save_dir,'cifar_finetune')
+  save_npy_file = os.path.join(save_dir,'finetune')
   variable_list.write(save_npy_file)
 
 def create_dir():
