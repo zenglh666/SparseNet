@@ -142,7 +142,8 @@ def train(model):
           grads_vars = zip(grads, trainable_variables)
           tower_grads.append(grads_vars)
 
-    grads = average_gradients(tower_grads)
+    with tf.device('/cpu:0'):
+      grads = average_gradients(tower_grads)
     apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
 
     for grad, var in grads:

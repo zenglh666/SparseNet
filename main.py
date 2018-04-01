@@ -297,6 +297,9 @@ def finetune_decompose(save_dir):
         variable_list = model.get_variable_list()
         logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
         print_hyper_param(variable_list)
+        
+        step = sess.run(global_step)
+        evaluation(eval1_op, eval5_op, sess, step)
         training(sess, global_step, train_op, loss, eval1_op, eval5_op,
                  checkpoint_file, saver, merged, train_writer)
         model.record_parameters(sess)
