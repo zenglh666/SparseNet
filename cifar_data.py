@@ -50,9 +50,9 @@ class Cifar10Data():
       ValueError: if there are not data_files matching the subset.
     """
     if self.subset=='train':
-      data_files = [os.path.join(data_dir, 'data_batch_%d.bin' % i) for i in xrange(1, 6)]
+      data_files = [os.path.join(FLAGS.cifar10_data_dir, 'data_batch_%d.bin' % i) for i in range(1, 6)]
     elif self.subset=='validation':
-      data_files = [os.path.join(data_dir, 'test_batch.bin')]
+      data_files = [os.path.join(FLAGS.cifar10_data_dir, 'test_batch.bin')]
 
     for f in data_files:
       if not tf.gfile.Exists(f):

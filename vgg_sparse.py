@@ -8,7 +8,7 @@ from model import Model
 
 FLAGS = tf.app.flags.FLAGS
 
-class VGGModel(Model):
+class VGG16HyperParameter():
   _CONV_NAMES = (
     'conv1_1','conv1_2','conv2_1','conv2_2','conv3_1','conv3_2','conv3_3',
     'conv4_1','conv4_2','conv4_3','conv5_1','conv5_2','conv5_3')
@@ -57,8 +57,58 @@ class VGGModel(Model):
   _loss_weights = [1,1,1,1,1,1,1,1,1,1,10,10]
   _input_shape = [224, 224, 112, 112, 56, 56, 56, 28, 28, 28 ,14, 14, 14]
 
+class VGG4HyperParameter():
+  _CONV_NAMES = ('conv1_1','conv1_2','conv2_1','conv2_2')
+  _SPARSE_NAMES = ('sparse1_2','sparse2_1','sparse2_2')
+  _FULLY_NAMES = ('fc1','fc2','fc3')
+
+  _SPARSE_SHAPES_INIT = [
+    #[[1,1,3,3],[3,1,3,32],[1,3,3,32],[2,2,3,32],[1,1,96,96],[96]],
+    [[1,1,96,96],[3,1,96,32],[1,3,96,32],[2,2,96,32],[1,1,96,96],[96]],
+    [[1,1,96,96],[3,1,96,64],[1,3,96,64],[2,2,96,64],[1,1,192,192],[192]],
+    [[1,1,192,192],[3,1,192,64],[1,3,192,64],[2,2,192,64],[1,1,192,192],[192]]]
+
+  _CONV_SHAPES_INIT = [
+    [[3,3,3,96],[96]],
+    [[3,3,96,96],[96]],
+    [[3,3,96,192],[192]],
+    [[3,3,192,192],[192]]]
+
+  _input_shape = [24, 24, 12, 12]
+  _loss_weights = [1,1,1,1]
+  _repeat_num = [2,2]
+
+  def __init__(self):
+    if FLAGS.dataset == 'cifar10':
+      self._FULLY_SHAPES_INIT = [
+        [[6*6*192,1024],[1024]],
+        [[1024,1024],[1024]],
+        [[1024,10],[10]]]
+    else:
+      self._FULLY_SHAPES_INIT = [
+        [[6*6*192,1024],[1024]],
+        [[1024,1024],[1024]],
+        [[1024,100],[100]]]
+
+class VGGModel(Model):
+
   def __init__(self, variable_list=None, data_type='float32'):
     self._data_type = data_type
+    if FLAGS.model == 'VGG16':
+      HyperParater = VGG16HyperParameter()
+    elif FLAGS.model == 'VGG4':
+      HyperParater = VGG4HyperParameter()
+
+    self._CONV_NAMES = HyperParater._CONV_NAMES
+    self._SPARSE_NAMES = HyperParater._SPARSE_NAMES
+    self._FULLY_NAMES = HyperParater._FULLY_NAMES
+    self._CONV_SHAPES_INIT = HyperParater._CONV_SHAPES_INIT
+    self._SPARSE_SHAPES_INIT = HyperParater._SPARSE_SHAPES_INIT
+    self._FULLY_SHAPES_INIT = HyperParater._FULLY_SHAPES_INIT
+    self._repeat_num = HyperParater._repeat_num
+    self._loss_weights = HyperParater._loss_weights
+    self._input_shape = HyperParater._input_shape
+
     if variable_list != None:
       variable_list_in = variable_list
     else:
@@ -162,8 +212,8 @@ class VGGBaseTrain(VGGModel):
 
   def loss(self, images, labels, stage='train', reuse=False):
       logits = self.inference(images, stage, reuse)
-      cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(
-        labels=labels, logits=logits, name='cross_entropy_per_example')
+      cross_entropy = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
+        labels=labels, logits=logits), name='cross_entropy_per_example')
       tf.add_to_collection('cross_entropy_losses', cross_entropy)
       regularizer_loss = tf.reduce_sum(
         tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES),

@@ -135,7 +135,7 @@ def summary(loss, global_step):
 
 def train_base(save_dir):
 
-  if FLAGS.model == 'VGG16':
+  if FLAGS.model == 'VGG16' or FLAGS.model == 'VGG4':
     model = VGGBaseTrain()
   train_op, loss, global_step = train(model)
   eval1_op, eval5_op = eval(model)
