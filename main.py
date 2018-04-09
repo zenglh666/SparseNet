@@ -42,7 +42,8 @@ tf.app.flags.DEFINE_string('save_dir', 'E:\\tensorflow',
                            '''the directory of file saved.''')
 tf.app.flags.DEFINE_string('restore_check_point_file', '',
                            '''the directory of file saved''')
-
+tf.app.flags.DEFINE_string('restore_npz_file', '',
+                           '''the directory of file saved''')
 tf.app.flags.DEFINE_string('log_file', timestr+'.log',
                            '''the directory of file saved''')
 tf.app.flags.DEFINE_float('reduce_ratio',0.0,
@@ -186,8 +187,18 @@ def train_decompose(save_dir):
   variable_list = None
   for epoch in range(total_epoch):
     tf.reset_default_graph()
-    if FLAGS.model == 'VGG16':
-      model = VGGSparseTrain(variable_list)
+    if FLAGS.model == 'VGG16' or FLAGS.model == 'VGG4':
+      if epoch == 0 and FLAGS.restore_npz_file != '':
+        checkpoint_npz_file = os.path.join(save_dir,'..',FLAGS.restore_npz_file)
+        variable_list = VariableList(file_name =checkpoint_npz_file)
+        model = VGGSparseTrain(variable_list)
+        logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
+        print_hyper_param(variable_list)
+        logger.info('loading trained parameter from %s, ignore layer training before pruning raduce' % checkpoint_npz_file)
+        variable_list = model.pruning_reduce(FLAGS.reduce_ratio)
+        continue
+      else:
+        model = VGGSparseTrain(variable_list)
 
     train_op, loss, global_step = train(model)
     eval1_op, eval5_op = eval(model, reuse=False)
