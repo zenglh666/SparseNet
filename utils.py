@@ -21,6 +21,8 @@ tf.app.flags.DEFINE_string('optimizer', 'SGD',
                             """optimizer.""")
 tf.app.flags.DEFINE_integer('num_gpu', 1,
                             """number of gpu.""")
+tf.app.flags.DEFINE_integer('shift_gpu', 0,
+                            """number of gpu.""")
 tf.app.flags.DEFINE_integer('decay_iter', 50000,
                             """Iterations after which learning rate decays.""")
 tf.app.flags.DEFINE_boolean('debug',False,
@@ -131,7 +133,7 @@ def train(model):
       if FLAGS.debug:
         devicestr = '/gpu:0'
       else:
-        devicestr = '/gpu:'+str(i)
+        devicestr = '/gpu:'+str(i + FLAGS.shift_gpu)
       with tf.device(devicestr):
         with tf.name_scope('%s_%d' % ('train', i)) as scope:
           loss = model.loss(images_splits[i], labels_splits[i], reuse=reuse)
@@ -177,7 +179,7 @@ def eval(model, reuse = True):
         if FLAGS.debug:
           devicestr = '/gpu:0'
         else:
-          devicestr = '/gpu:'+str(i)
+          devicestr = '/gpu:'+str(i + FLAGS.shift_gpu)
         with tf.device(devicestr):
           logits = model.inference(images_splits[i], 'validation', reuse=reuse)
           reuse = True
