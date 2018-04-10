@@ -115,6 +115,8 @@ def train(model):
         opt = tf.train.GradientDescentOptimizer(lr)
     elif FLAGS.optimizer == 'MOM':
         opt = tf.train.MomentumOptimizer(lr, 0.9)
+    elif FLAGS.optimizer == 'ADA':
+        opt = tf.train.AdamOptimizer(lr)
     else:
         raise ValueError('optimizer unsupported')
 

@@ -271,7 +271,7 @@ def finetune_decompose(save_dir):
       save_npy_file = os.path.join(save_dir,'train')
       variable_list = VariableList(file_name = save_npy_file)
 
-    if FLAGS.model == 'VGG16':
+    if FLAGS.model == 'VGG16' or 'VGG4':
       model = VGGSparseFinetune(variable_list)
 
     if epoch == 0:
@@ -335,7 +335,7 @@ def create_dir():
   base_dir = FLAGS.save_dir
   setting_dir = 'rr_%.2f_sr_%.2f_pr_%.2f' % (
     FLAGS.reduce_ratio, FLAGS.sparse_ratio, FLAGS.project_ratio)
-  log_dir=os.path.join(base_dir,FLAGS.model,setting_dir)
+  log_dir=os.path.join(base_dir,FLAGS.model,FLAGS.dataset, setting_dir)
   if not os.path.exists(log_dir):
     os.mkdir(log_dir)
   return log_dir
