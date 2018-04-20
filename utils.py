@@ -141,7 +141,6 @@ def train(model):
           loss = model.loss(images_splits[i], labels_splits[i], reuse=reuse)
           tf.add_to_collection('losses', loss)
           reuse = True
-          trainable_variables = tf.trainable_variables()
           grads = opt.compute_gradients(loss)
           tower_grads.append(grads)
 

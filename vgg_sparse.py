@@ -392,8 +392,8 @@ class VGGSparseFinetune(VGGModel):
 
   def loss(self, images, labels, stage='train', reuse=False):
       logits = self.inference(images, stage, reuse)
-      cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(
-        labels=labels, logits=logits, name='cross_entropy_per_example')
+      cross_entropy = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
+        labels=labels, logits=logits, name='cross_entropy_per_example'))
       tf.add_to_collection('cross_entropy_losses', cross_entropy)
       regularizer_loss = tf.reduce_sum(
         tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES),
