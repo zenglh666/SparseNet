@@ -142,9 +142,8 @@ def train(model):
           tf.add_to_collection('losses', loss)
           reuse = True
           trainable_variables = tf.trainable_variables()
-          grads = tf.gradients(loss, trainable_variables)
-          grads_vars = zip(grads, trainable_variables)
-          tower_grads.append(grads_vars)
+          grads = opt.compute_gradients(loss)
+          tower_grads.append(grads)
 
     with tf.device('/cpu:0'):
       grads = average_gradients(tower_grads)
