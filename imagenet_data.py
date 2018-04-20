@@ -23,11 +23,12 @@ import os
 import tensorflow as tf
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('imagenet_train_data_dir', 'E:/data2/imagenet_train_tfrecord',
+tf.app.flags.DEFINE_string('imagenet_train_data_dir', 'E:/data/imagenet_train_tfrecord',
                            """Path to the imagenet data directory.""")
-tf.app.flags.DEFINE_string('imagenet_valid_data_dir', 'E:/data2/imagenet_valid_tfrecord',
+tf.app.flags.DEFINE_string('imagenet_valid_data_dir', 'E:/data/imagenet_valid_tfrecord',
                            """Path to the imagenet data directory.""")
-
+tf.app.flags.DEFINE_boolean('already_scale',False,
+                            '''If we distort color''')
 
 class ImagenetData():
   """ImageNet data set."""
@@ -152,6 +153,19 @@ class ImagenetData():
 
     return features['image/encoded'], label, bbox, features['image/class/text']
 
+  def __parse_scale_example_proto(self, example_serialized):
+    feature_map = {
+      'image/encoded': tf.FixedLenFeature([], dtype=tf.string,
+                                          default_value=''),
+      'image/label': tf.FixedLenFeature([1], dtype=tf.int64,
+                                              default_value=-1),
+    }
+
+    features = tf.parse_single_example(example_serialized, feature_map)
+    label = tf.cast(features['image/label'], dtype=tf.int32)
+
+    return features['image/encoded'], label
+
   def __decode_jpeg(self, image_buffer, scope=None):
     """Decode a JPEG string into one 3-D float image Tensor.
 
@@ -175,9 +189,13 @@ class ImagenetData():
       return image
 
   def parse_from_string(self, example_serialized):
-    image_buffer, label_index, bbox, _ = self.__parse_example_proto(example_serialized)
+    if FLAGS.already_scale:
+      image_buffer, label_index = self.__parse_scale_example_proto(example_serialized)
+    else:
+      image_buffer, label_index, bbox, _ = self.__parse_example_proto(example_serialized)
+      label_index = tf.subtract(label_index, 1)
     image = self.__decode_jpeg(image_buffer)
-    return image, tf.subtract(label_index, 1)
+    return image, label_index
 
   def download_message(self):
     """Instruction to download and extract the tarball from Flowers website."""
