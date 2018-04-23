@@ -23,11 +23,11 @@ import os
 import tensorflow as tf
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('imagenet_train_data_dir', 'E:/data/imagenet_train_tfrecord',
+tf.app.flags.DEFINE_string('imagenet_train_data_dir', 'F:/data/imagenet_scale256_train_tfrecord',
                            """Path to the imagenet data directory.""")
-tf.app.flags.DEFINE_string('imagenet_valid_data_dir', 'E:/data/imagenet_valid_tfrecord',
+tf.app.flags.DEFINE_string('imagenet_valid_data_dir', 'F:/data/imagenet_scale256_valid_tfrecord',
                            """Path to the imagenet data directory.""")
-tf.app.flags.DEFINE_boolean('already_scale',False,
+tf.app.flags.DEFINE_boolean('already_scale',True,
                             '''If we distort color''')
 
 class ImagenetData():

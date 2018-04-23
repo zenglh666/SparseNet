@@ -49,7 +49,7 @@ tf.app.flags.DEFINE_integer('num_preprocess_threads', 16,
                             """Please make this a multiple of 4.""")
 tf.app.flags.DEFINE_integer('num_readers', 8,
                             """Number of parallel readers during train.""")
-tf.app.flags.DEFINE_string('mean_file', 'E:\\data2\\imagenet_mean.npy',
+tf.app.flags.DEFINE_string('mean_file', 'F:/data/imagenet_mean.npy',
                            """Path to the imagenet data directory.""")
 tf.app.flags.DEFINE_boolean('distort_color',False,
                             '''If we distort color''')
@@ -142,7 +142,7 @@ def batch_inputs(dataset, batch_size, train, num_preprocess_threads=None,
       reader = dataset.reader()
       _, example_serialized = reader.read(filename_queue)
 
-    if dataset.name=='imagenet':
+    if dataset.name=='imagenet' or dataset.name=='imagenet_scale':
       mean_array = np.transpose(tf.divide(np.load(FLAGS.mean_file), 256.), (2,1,0))
       mean_tensor = tf.convert_to_tensor(mean_array, tf.float32)
     else:

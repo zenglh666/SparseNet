@@ -154,7 +154,7 @@ def train_base(save_dir):
     train_writer = None
 
   config=tf.ConfigProto(
-      log_device_placement=False, allow_soft_placement=False,
+      log_device_placement=False, allow_soft_placement=True,
       gpu_options=tf.GPUOptions(allow_growth=True))
 
   with tf.Session(config=config) as sess:
@@ -167,6 +167,7 @@ def train_base(save_dir):
     if FLAGS.model == 'VGG16':
       model.read_base_parameters('./vgg_parameters', sess)
       logger.info('successfully load parameter from ./vgg_parameters')
+      evaluation(eval1_op, eval5_op, sess, 0)
 
     if FLAGS.restore_check_point_file != '':
       checkpoint_file = os.path.join(save_dir, FLAGS.restore_check_point_file)

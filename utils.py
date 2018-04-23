@@ -69,7 +69,7 @@ def average_gradients(tower_grads):
     return average_grads
 
 def get_validation_num():
-  if FLAGS.dataset == 'imagenet':
+  if FLAGS.dataset == 'imagenet' or FLAGS.dataset == 'imagenet_scale':
     return ImagenetData('imagenet', subset='validation').num_examples_per_epoch()
   elif FLAGS.dataset == 'cifar10':
     return Cifar10Data('cifar10', subset='validation').num_examples_per_epoch()
@@ -90,7 +90,7 @@ def inputs(subset):
     if FLAGS.dataset is None:
       raise ValueError('Please supply a dataset')
 
-    if FLAGS.dataset == 'imagenet':
+    if FLAGS.dataset == 'imagenet' or FLAGS.dataset == 'imagenet_scale':
       dataset = ImagenetData('imagenet', subset=subset)
     elif FLAGS.dataset == 'cifar10':
       dataset = Cifar10Data('cifar10', subset=subset)
