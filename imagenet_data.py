@@ -27,8 +27,6 @@ tf.app.flags.DEFINE_string('imagenet_train_data_dir', 'F:/data/imagenet_scale256
                            """Path to the imagenet data directory.""")
 tf.app.flags.DEFINE_string('imagenet_valid_data_dir', 'F:/data/imagenet_scale256_valid_tfrecord',
                            """Path to the imagenet data directory.""")
-tf.app.flags.DEFINE_boolean('already_scale',True,
-                            '''If we distort color''')
 
 class ImagenetData():
   """ImageNet data set."""
@@ -189,9 +187,9 @@ class ImagenetData():
       return image
 
   def parse_from_string(self, example_serialized):
-    if FLAGS.already_scale:
+    if self.name == 'imagenet_scale':
       image_buffer, label_index = self.__parse_scale_example_proto(example_serialized)
-    else:
+    elif self.name == 'imagenet':
       image_buffer, label_index, bbox, _ = self.__parse_example_proto(example_serialized)
       label_index = tf.subtract(label_index, 1)
     image = self.__decode_jpeg(image_buffer)

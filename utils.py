@@ -91,11 +91,11 @@ def inputs(subset):
       raise ValueError('Please supply a dataset')
 
     if FLAGS.dataset == 'imagenet' or FLAGS.dataset == 'imagenet_scale':
-      dataset = ImagenetData('imagenet', subset=subset)
+      dataset = ImagenetData(FLAGS.dataset, subset=subset)
     elif FLAGS.dataset == 'cifar10':
-      dataset = Cifar10Data('cifar10', subset=subset)
+      dataset = Cifar10Data(FLAGS.dataset, subset=subset)
     elif FLAGS.dataset == 'cifar100':
-      dataset = Cifar100Data('cifar100', subset=subset)
+      dataset = Cifar100Data(FLAGS.dataset, subset=subset)
 
     if subset == 'train':
       images, labels = image_reader.create_data_batch(dataset, FLAGS.train_batch_size)
