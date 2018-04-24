@@ -7,9 +7,9 @@ import os
 import tensorflow as tf
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('cifar10_data_dir', 'E:/data2/cifar/cifar10/cifar-10-batches-bin',
+tf.app.flags.DEFINE_string('cifar10_data_dir', 'F:/data/cifar/cifar10/cifar-10-batches-bin',
                            """Path to the imagenet data directory.""")
-tf.app.flags.DEFINE_string('cifar100_data_dir', 'E:/data2/cifar/cifar100/cifar-100-binary',
+tf.app.flags.DEFINE_string('cifar100_data_dir', 'F:/data/cifar/cifar100/cifar-100-binary',
                            """Path to the imagenet data directory.""")
 
 class Cifar10Data():

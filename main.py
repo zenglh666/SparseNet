@@ -165,7 +165,7 @@ def train_base(save_dir):
     threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
     if FLAGS.model == 'VGG16':
-      model.read_base_parameters('./vgg_parameters', sess)
+      model.read_base_parameters('./vgg16_parameters', sess)
       logger.info('successfully load parameter from ./vgg_parameters')
       evaluation(eval1_op, eval5_op, sess, 0)
 
