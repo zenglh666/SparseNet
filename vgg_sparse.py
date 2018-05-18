@@ -90,6 +90,80 @@ class VGG4HyperParameter():
         [[1024,1024],[1024]],
         [[1024,100],[100]]]
 
+class VGG4V2HyperParameter():
+  _CONV_NAMES = ('conv1_1','conv1_2','conv2_1','conv2_2')
+  _SPARSE_NAMES = ('sparse1_2','sparse2_1','sparse2_2')
+  _FULLY_NAMES = ('fc1','fc2','fc3')
+
+  _SPARSE_SHAPES_INIT = [
+    #[[1,1,3,3],[3,1,3,32],[1,3,3,32],[2,2,3,32],[1,1,96,96],[96]],
+    [[1,1,192,192],[3,1,192,64],[1,3,192,64],[2,2,192,64],[1,1,192,192],[192]],
+    [[1,1,192,192],[3,1,192,128],[1,3,192,128],[2,2,192,128],[1,1,384,384],[384]],
+    [[1,1,384,384],[3,1,384,128],[1,3,384,128],[2,2,384,128],[1,1,384,384],[384]]]
+
+  _CONV_SHAPES_INIT = [
+    [[3,3,3,192],[192]],
+    [[3,3,192,192],[192]],
+    [[3,3,192,384],[384]],
+    [[3,3,384,384],[384]]]
+
+  _input_shape = [24, 24, 12, 12]
+  _loss_weights = [1,1,1,1]
+  _repeat_num = [2,2]
+
+  def __init__(self):
+    if FLAGS.dataset == 'cifar10':
+      self._FULLY_SHAPES_INIT = [
+        [[6*6*384,1024],[1024]],
+        [[1024,1024],[1024]],
+        [[1024,10],[10]]]
+    else:
+      self._FULLY_SHAPES_INIT = [
+        [[6*6*384,1024],[1024]],
+        [[1024,1024],[1024]],
+        [[1024,100],[100]]]
+
+class VGG8HyperParameter():
+  _CONV_NAMES = ('conv1_1','conv1_2','conv1_3','conv1_4', 'conv2_1','conv2_2', 'conv2_3','conv2_4')
+  _SPARSE_NAMES = ('sparse1_2','sparse1_3','sparse1_4','sparse2_1','sparse2_2','sparse2_3','sparse2_4')
+  _FULLY_NAMES = ('fc1','fc2','fc3')
+
+  _SPARSE_SHAPES_INIT = [
+    #[[1,1,3,3],[3,1,3,32],[1,3,3,32],[2,2,3,32],[1,1,96,96],[96]],
+    [[1,1,96,96],[3,1,96,32],[1,3,96,32],[2,2,96,32],[1,1,96,96],[96]],
+    [[1,1,96,96],[3,1,96,32],[1,3,96,32],[2,2,96,32],[1,1,96,96],[96]],
+    [[1,1,96,96],[3,1,96,32],[1,3,96,32],[2,2,96,32],[1,1,96,96],[96]],
+    [[1,1,96,96],[3,1,96,64],[1,3,96,64],[2,2,96,64],[1,1,192,192],[192]],
+    [[1,1,192,192],[3,1,192,64],[1,3,192,64],[2,2,192,64],[1,1,192,192],[192]],
+    [[1,1,192,192],[3,1,192,64],[1,3,192,64],[2,2,192,64],[1,1,192,192],[192]],
+    [[1,1,192,192],[3,1,192,64],[1,3,192,64],[2,2,192,64],[1,1,192,192],[192]]]
+
+  _CONV_SHAPES_INIT = [
+    [[3,3,3,96],[96]],
+    [[3,3,96,96],[96]],
+    [[3,3,96,96],[96]],
+    [[3,3,96,96],[96]],
+    [[3,3,96,192],[192]],
+    [[3,3,192,192],[192]],
+    [[3,3,192,192],[192]],
+    [[3,3,192,192],[192]]]
+
+  _input_shape = [24, 24, 12, 12]
+  _loss_weights = [1,1,1,1,1,1,1,1]
+  _repeat_num = [4,4]
+
+  def __init__(self):
+    if FLAGS.dataset == 'cifar10':
+      self._FULLY_SHAPES_INIT = [
+        [[6*6*192,1024],[1024]],
+        [[1024,1024],[1024]],
+        [[1024,10],[10]]]
+    else:
+      self._FULLY_SHAPES_INIT = [
+        [[6*6*192,1024],[1024]],
+        [[1024,1024],[1024]],
+        [[1024,100],[100]]]
+
 class VGGModel(Model):
 
   def __init__(self, variable_list=None, data_type='float32'):
@@ -98,6 +172,10 @@ class VGGModel(Model):
       HyperParater = VGG16HyperParameter()
     elif FLAGS.model == 'VGG4':
       HyperParater = VGG4HyperParameter()
+    elif FLAGS.model == 'VGG4V2':
+      HyperParater = VGG4V2HyperParameter()
+    elif FLAGS.model == 'VGG8':
+      HyperParater = VGG8HyperParameter()
 
     self._CONV_NAMES = HyperParater._CONV_NAMES
     self._SPARSE_NAMES = HyperParater._SPARSE_NAMES
