@@ -136,8 +136,7 @@ def summary(loss, global_step):
 
 def train_base(save_dir):
 
-  if FLAGS.model == 'VGG16' or FLAGS.model == 'VGG4':
-    model = VGGBaseTrain()
+  model = VGGBaseTrain()
   train_op, loss, global_step = train(model)
   eval1_op, eval5_op = eval(model)
 
@@ -188,8 +187,7 @@ def train_decompose(save_dir):
   variable_list = None
   for epoch in range(total_epoch):
     tf.reset_default_graph()
-    if FLAGS.model == 'VGG16' or FLAGS.model == 'VGG4':
-      if epoch == 0 and FLAGS.restore_npz_file != '':
+    if epoch == 0 and FLAGS.restore_npz_file != '':
         checkpoint_npz_file = os.path.join(save_dir,'..',FLAGS.restore_npz_file)
         variable_list = VariableList(file_name =checkpoint_npz_file)
         model = VGGSparseTrain(variable_list)
@@ -198,7 +196,7 @@ def train_decompose(save_dir):
         logger.info('loading trained parameter from %s, ignore layer training before pruning raduce' % checkpoint_npz_file)
         variable_list = model.pruning_reduce(FLAGS.reduce_ratio)
         continue
-      else:
+    else:
         model = VGGSparseTrain(variable_list)
 
     train_op, loss, global_step = train(model)
@@ -272,8 +270,7 @@ def finetune_decompose(save_dir):
       save_npy_file = os.path.join(save_dir,'train')
       variable_list = VariableList(file_name = save_npy_file)
 
-    if FLAGS.model == 'VGG16' or 'VGG4':
-      model = VGGSparseFinetune(variable_list)
+    model = VGGSparseFinetune(variable_list)
 
     if epoch == 0:
       logger.info('FLOPS = %d, compression rate = %.4f' % model.calculate_flops(variable_list))
